@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Representantes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .container-wide {
+            max-width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 10px; right: 10px; background-color: #f1f1f1; padding: 5px; border-radius: 5px;">
+        Tasa de Cambio Actual: {{ exchange_rate }}
+    </div>
+
+    <header class="bg-primary text-white text-center py-4">
+        <h1>Lista de Representantes</h1>
+    </header>
+
+    <main class="container container-wide my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <!-- Search Filter -->
+                <div class="mb-3">
+                    <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control" placeholder="Buscar en la lista de representantes...">
+                </div>
+                <div class="table-responsive bg-light p-4 rounded shadow-sm">
+                    <table id="representativeTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Teléfono Principal</th>
+                                <th>Teléfono Secundario</th>
+                                <th>Dirección</th>
+                                <th>Email</th>
+                                <th>Información de Facturación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for representative in representatives %}
+                                <tr>
+                                    <td>{{ representative.nombre }}</td>
+                                    <td>{{ representative.apellido }}</td>
+                                    <td>{{ representative.telefono_principal }}</td>
+                                    <td>{{ representative.telefono_secundario|default:"None" }}</td>
+                                    <td>{{ representative.direccion }}</td>
+                                    <td>{{ representative.email }}</td>
+                                    <td>{{ representative.informacion_facturacion }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_representative' representative.id %}" class="btn btn-warning btn-sm">Editar</a>
+                                        <a href="{% url 'delete_representative' representative.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>© 2024 Sistema de Gestión</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Table Filtering -->
+    <script>
+        function filterTable() {
+            let input = document.getElementById('searchInput');
+            let filter = input.value.toLowerCase();
+            let table = document.getElementById('representativeTable');
+            let tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                let tds = tr[i].getElementsByTagName('td');
+                let found = false;
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j].innerHTML.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+                tr[i].style.display = found ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>

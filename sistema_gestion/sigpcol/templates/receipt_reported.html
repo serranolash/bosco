@@ -1,0 +1,20 @@
+<!-- templates/receipt_reported.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo Reportado</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Recibo Reportado</h1>
+    <p>El recibo ha sido reportado exitosamente.</p>
+    <p><strong>Detalles del Recibo:</strong></p>
+    <ul>
+        <li>Fecha: {{ receipt.date }}</li>
+        <li>Monto: {{ receipt.amount }}</li>
+        <!-- Añade aquí otros detalles que quieras mostrar -->
+    </ul>
+    <a href="{% url 'report_receipt' %}">Reportar otro recibo</a>
+</body>
+</html>

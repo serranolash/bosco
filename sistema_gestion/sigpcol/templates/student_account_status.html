@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de Cuenta de {{ student.nombre }} {{ student.apellido }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-4">
+        <h1>Estado de Cuenta de {{ student.nombre }} {{ student.apellido }}</h1>
+    </header>
+
+    <main class="container my-4">
+        <h2>Pagos Realizados</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Fecha de Pago</th>
+                    <th>Monto (BS)</th>
+                    <th>Monto (USD)</th>
+                    <th>Estado</th>
+                    <th>Imagen de Pago</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.fecha_pago }}</td>
+                        <td>{{ payment.monto_bs }}</td>
+                        <td>{{ payment.monto_usd }}</td>
+                        <td>{{ payment.estado }}</td>
+                        <td>
+                            {% if payment.imagen_pago %}
+                                <img src="{{ payment.imagen_pago.url }}" alt="Imagen de Pago" class="img-thumbnail" style="width: 100px;">
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Recibos de Abono</h3>
+        <table class="table table-bordered table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Fecha de Abono</th>
+                    <th>Monto de Abono</th>
+                    <th>Imagen del Recibo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for receipt in receipts %}
+                    <tr>
+                        <td>{{ receipt.fecha_abono }}</td>
+                        <td>{{ receipt.monto_abono }}</td>
+                        <td>
+                            {% if receipt.recibo_imagen %}
+                                <img src="{{ receipt.recibo_imagen.url }}" alt="Imagen del Recibo" class="img-thumbnail" style="width: 100px;">
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>© 2024 Sistema de Gestión</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

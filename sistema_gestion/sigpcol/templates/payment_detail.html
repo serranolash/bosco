@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del Pago</title>
+</head>
+<body>
+    <h1>Detalle del Pago</h1>
+    <p>ID: {{ payment.id }}</p>
+    <p>Monto USD: {{ payment.monto_usd }}</p>
+    <p>Monto Pendiente: {{ monto_pendiente }}</p>
+    <a href="{% url 'emitir_factura' payment.id %}">Emitir Factura</a>
+</body>
+</html>

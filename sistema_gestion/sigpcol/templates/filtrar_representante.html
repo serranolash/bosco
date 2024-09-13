@@ -1,0 +1,21 @@
+<!-- filtrar_representante.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emitir Factura</title>
+</head>
+<body>
+    <h1>Emitir Factura</h1>
+    <form method="GET">
+        {{ form.as_p }}
+        <button type="submit">Filtrar</button>
+    </form>
+
+    {% if form.cleaned_data.payment %}
+        <h2>Factura Disponible</h2>
+        <a href="{% url 'emitir_factura' form.cleaned_data.payment.id %}">Emitir Factura para {{ form.cleaned_data.payment }}</a>
+    {% endif %}
+</body>
+</html>

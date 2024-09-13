@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Estudiantes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <a href="{% url 'index' %}" class="btn btn-secondary mb-4">Volver al Inicio</a>
+    
+    <header class="bg-primary text-white text-center py-4">
+        <h1>Lista de Estudiantes</h1>
+    </header>
+
+    <main class="container my-4">
+        <!-- Filtros -->
+        <form method="get" action="{% url 'student_list' academic_year_id=academic_year_id %}" class="row g-3 mb-4">
+            <div class="col-md-4">
+                {{ form.grade.label_tag }}
+                {{ form.grade }}
+            </div>
+            <div class="col-md-4">
+                {{ form.section.label_tag }}
+                {{ form.section }}
+            </div>
+            <div class="col-md-4">
+                {{ form.student_name.label_tag }}
+                {{ form.student_name }}
+            </div>
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{% url 'student_list' academic_year_id=academic_year_id %}" class="btn btn-outline-secondary">Limpiar Filtros</a>
+            </div>
+        </form>
+        
+        <!-- Lista de estudiantes -->
+        {% if page_obj %}
+            <table class="table table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Grado</th>
+                        <th>Sección</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in page_obj %}
+                        <tr>
+                            <td>{{ student.nombre }}</td>
+                            <td>{{ student.apellido }}</td>
+                            <td>{{ student.grado.nombre }}</td>
+                            <td>{{ student.grado.seccion }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Controles de paginación -->
+            <nav aria-label="Navegación de página">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}">Anterior</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}">Siguiente</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <p>No se encontraron estudiantes.</p>
+        {% endif %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

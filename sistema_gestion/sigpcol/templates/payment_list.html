@@ -1,0 +1,149 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Pagos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<style>
+    .table-danger {
+        background-color: #f8d7da; /* Rojo claro para mora */
+        color: #721c24;
+    }
+
+    .table-success {
+        background-color: #d4edda; /* Verde claro para al día */
+        color: #155724;
+    }
+    /* Estilo para el botón de regreso */
+    .back-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .back-button:hover {
+        background-color: #45a049;
+    }
+</style>
+<body>
+    <a href="{% url 'index' %}" class="back-button">Volver al Inicio</a>
+    <header class="bg-primary text-white text-center py-4">
+        <h1>Lista de Pagos</h1>
+    </header>
+
+    <main class="container my-4">
+        <form method="get" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" name="representante" class="form-control" placeholder="Buscar por representante" value="{{ request.GET.representante }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Representante</th>
+                            <th>Año Académico</th>
+                            <th>Monto (BS)</th>
+                            <th>Monto (USD)</th>
+                            <th>Abono (USD)</th>
+                            <th>Fecha de Pago</th>
+                            <th>Número de Transacción</th>
+                            <th>Banco Emisor</th>
+                            <th>Documento de Identidad</th>
+                            <th>Fecha de Aprobación</th>
+                            <th>Estado</th>
+                            <th>Comprobante de Pago</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.estudiante.nombre }} {{ payment.estudiante.apellido }}</td>
+                                <td>{{ payment.representante.nombre }} {{ payment.representante.apellido }}</td>
+                                <td>{{ payment.año_académico }}</td>
+                                <td>{{ payment.monto_bs }}</td>
+                                <td>{{ payment.monto_usd }}</td>
+                                <td>{{ payment.abono_usd }}</td>
+                                <td>{{ payment.fecha_pago }}</td>
+                                <td>{{ payment.numero_transaccion }}</td>
+                                <td>{{ payment.banco_emisor }}</td>
+                                <td>{{ payment.documento_identidad }}</td>
+                                <td>{{ payment.fecha_aprobacion|date:"d M, Y h:i a" }}</td>
+                                <td>{{ payment.get_estado_display }}</td>
+                                <td>
+                                    {% if payment.imagen_pago %}
+                                        <img src="{{ payment.imagen_pago.url }}" alt="Comprobante de Pago" class="img-thumbnail" style="max-width: 100px;" data-bs-toggle="modal" data-bs-target="#modalImagen{{ payment.id }}">
+                                    {% else %}
+                                        No disponible
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if payment.estado == 'PENDIENTE' %}
+                                        <form action="{% url 'approve_payment' payment.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                                        </form>
+                                        <form action="{% url 'reject_payment' payment.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
+                                        </form>
+                                    {% endif %}
+                                    {% if payment.imagen_pago %}
+                                        <a href="{{ payment.imagen_pago.url }}" download class="btn btn-primary btn-sm">Descargar</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <!-- Modal para mostrar la imagen en tamaño completo -->
+                            <div class="modal fade" id="modalImagen{{ payment.id }}" tabindex="-1" aria-labelledby="modalImagenLabel{{ payment.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalImagenLabel{{ payment.id }}">Comprobante de Pago</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            {% if payment.imagen_pago %}
+                                                <img src="{{ payment.imagen_pago.url }}" alt="Comprobante de Pago" class="img-fluid">
+                                            {% else %}
+                                                <p>No disponible</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <tr>
+                                <td colspan="14" class="text-center">No se encontraron pagos.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+   
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

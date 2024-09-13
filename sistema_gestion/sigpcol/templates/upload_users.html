@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cargar Usuarios por Lotes</title>
+</head>
+<body>
+    <h1>Cargar Usuarios por Lotes</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Cargar</button>
+    </form>
+</body>
+</html>

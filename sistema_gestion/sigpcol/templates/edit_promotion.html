@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Promociones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-4">
+        <h1 class="text-gothic">Editar Promociones - {{ academic_year.nombre }}</h1>
+    </header>
+
+    <main class="container my-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Grado</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in promoted_students %}
+                            <tr>
+                                <td>{{ student.nombre }}</td>
+                                <td>{{ student.apellido }}</td>
+                                <td>{{ student.grado.nombre }} - {{ student.grado.seccion }}</td>
+                                <td><input type="checkbox" name="delete_students" value="{{ student.id }}"></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>© 2024 Sistema de Gestión</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiantes en Mora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .table-danger {
+            background-color: #f8d7da; /* Rojo claro para mora */
+            color: #721c24;
+        }
+
+        .table-success {
+            background-color: #d4edda; /* Verde claro para al día */
+            color: #155724;
+        }
+        /* Estilo para el botón de regreso */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'index' %}" class="back-button">Volver al Inicio</a>
+    <div class="container">
+        <h1>Estudiantes en Mora</h1>
+        <form method="get">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+
+        <h2>Total en Mora: {{ total_due }}</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Grado</th>
+                    <th>Año Académico</th>
+                    <th>Representante</th>
+                    <th>Monto de Mora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in due_students %}
+                <tr class="{% if student.monto_de_mora > 0 %} table-danger {% else %} table-success {% endif %}">
+                    <td>{{ student.nombre }}</td>
+                    <td>{{ student.apellido }}</td>
+                    <td>{{ student.grado }}</td>
+                    <td>{{ student.anio_academico }}</td>
+                    <td>{{ student.representante }}</td>
+                    <td>{{ student.monto_de_mora|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No se encontraron estudiantes en mora.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de Reportes</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Estilo para el botón de regreso */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de regreso al índice -->
+    <a href="{% url 'index' %}" class="back-button">Volver al Inicio</a>
+
+    <h1>Estadísticas de Reportes</h1>
+
+    <form method="get">
+        <div>
+            <label for="student_name">Nombre del Estudiante:</label>
+            <input type="text" id="student_name" name="student_name" value="{{ form.student_name.value }}">
+        </div>
+        <div>
+            <label for="academic_year">Año Académico:</label>
+            {{ form.academic_year }}
+        </div>
+        <div>
+            <label for="grade">Grado:</label>
+            {{ form.grade }}
+        </div>
+        <div>
+            <label for="section">Sección:</label>
+            {{ form.section }}
+        </div>
+        <div>
+            <button type="submit">Filtrar</button>
+        </div>
+    </form>
+    
+
+    <h2>Detalles de los Pagos por Estudiante</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Ciclo Lectivo</th>
+                <th>Mes Pagado</th>
+                <th>Tarifa Mensual (con Descuento)</th>
+                <th>Total Pagado</th>
+                <th>Total Pendiente</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payments_data %}
+            <tr>
+                <td>{{ payment.estudiante__nombre }}</td>
+                <td>{{ payment.año_académico__nombre }}</td>
+                <td>{{ payment.mes }}</td>
+                <td>{{ payment.monto_con_descuento|floatformat:2 }}</td>
+                <td>{{ payment.total_pagado|floatformat:2 }}</td>
+                <td>{{ payment.monto_pendiente|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

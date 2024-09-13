@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura Emitida</title>
+</head>
+<body>
+    <h1>Factura Emitida</h1>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    <h2>Detalles del Pago</h2>
+    <ul>
+        <li>Representante: {{ payment.representante.nombre }}</li>
+        <li>Estudiante: {{ payment.estudiante.nombre }}</li>
+        <li>Monto USD: {{ payment.monto_usd }}</li>
+        <li>Monto BS: {{ payment.monto_bs }}</li>
+        <li>Fecha de Pago: {{ payment.fecha_pago }}</li>
+        <li>Estado: {{ payment.get_estado_display }}</li>
+    </ul>
+
+    <h2>Descargar Factura</h2>
+    <p>Puedes descargar la factura emitida haciendo clic en el siguiente enlace:</p>
+    <a href="{% static 'media/' %}{{ pdf_filename }}" download>{{ pdf_filename }}</a>
+
+    <p><a href="{% url 'payment_list' %}">Volver atrás</a></p>
+</body>
+</html>

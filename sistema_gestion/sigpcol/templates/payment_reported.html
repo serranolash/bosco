@@ -1,0 +1,22 @@
+<!-- templates/payment_reported.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pago Reportado</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Pago Reportado</h1>
+    <p>El pago ha sido reportado exitosamente.</p>
+    <p><strong>Detalles del Pago:</strong></p>
+    <ul>
+        <li>Fecha: {{ payment.date }}</li>
+        <li>Monto: {{ payment.amount }}</li>
+        <!-- Añade aquí otros detalles que quieras mostrar -->
+    </ul>
+    <a href="{% url 'report_payment' %}">Reportar otro pago</a>
+</body>
+</html>
