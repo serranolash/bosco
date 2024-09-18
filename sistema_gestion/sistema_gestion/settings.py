@@ -49,12 +49,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CRONJOBS = [
     ('0 6 * * *', 'sigpcol.management.commands.update_exchange_rate'),  # Run daily at 6 AM
 ]
 
+# Configuración de Whitenoise para comprimir y optimizar archivos estáticos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -67,6 +70,8 @@ MEDIA_URL = '/media/'
 ROOT_URLCONF = 'sistema_gestion.urls'
 
 STATIC_URL = '/static/'
+# Directorio donde se recopilarán los archivos estáticos
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATICFILES_DIRS = [
     BASE_DIR / "static",
